@@ -184,14 +184,14 @@ hr {
 </style>
 """, unsafe_allow_html=True)
 
-# --------------------------------------------------
-# LOAD DATA
-# --------------------------------------------------
-
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
+
+# --------------------------------------------------
+# LOAD DATA
+# --------------------------------------------------
 
 @st.cache_data(show_spinner="Loading datasets...")
 def load_data():
@@ -203,13 +203,19 @@ def load_data():
 
     # Check whether files exist
     if not ratings_path.exists():
-        raise FileNotFoundError(f"Ratings.csv not found at: {ratings_path}")
+        raise FileNotFoundError(
+            f"Ratings.csv not found at: {ratings_path}"
+        )
 
     if not users_path.exists():
-        raise FileNotFoundError(f"Users.csv not found at: {users_path}")
+        raise FileNotFoundError(
+            f"Users.csv not found at: {users_path}"
+        )
 
     if not books_path.exists():
-        raise FileNotFoundError(f"Books.csv not found at: {books_path}")
+        raise FileNotFoundError(
+            f"Books_final.csv not found at: {books_path}"
+        )
 
     # Load datasets
     ratings = pd.read_csv(
@@ -224,7 +230,7 @@ def load_data():
     )
 
     books = pd.read_csv(
-       Books_small,
+        books_path,
         dtype={"ISBN": str},
         low_memory=False
     )
@@ -288,8 +294,7 @@ def load_data():
     text_cols = [
         "Book-Title",
         "Book-Author",
-        "Publisher",
-        "Image-URL-M"
+        "Publisher"
     ]
 
     for col in text_cols:
@@ -301,7 +306,6 @@ def load_data():
             )
 
     return ratings, explicit, users, books
-
 
 # --------------------------------------------------
 # LOAD DATA SAFELY
