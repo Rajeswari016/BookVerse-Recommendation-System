@@ -199,7 +199,7 @@ def load_data():
     # Dataset paths
     ratings_path = BASE_DIR / "Ratings.csv"
     users_path = BASE_DIR / "Users.csv"
-    books_path = BASE_DIR / "Books.csv"
+    books_path = BASE_DIR / "Books_small.csv"
 
     # Check whether files exist
     if not ratings_path.exists():
@@ -224,7 +224,7 @@ def load_data():
     )
 
     books = pd.read_csv(
-        books_path,
+       Books_small,
         dtype={"ISBN": str},
         low_memory=False
     )
