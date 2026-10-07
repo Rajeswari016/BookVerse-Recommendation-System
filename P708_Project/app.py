@@ -188,22 +188,43 @@ hr {
 # LOAD DATA
 # --------------------------------------------------
 
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+
+
 @st.cache_data(show_spinner="Loading datasets...")
 def load_data():
 
+    # Dataset paths
+    ratings_path = BASE_DIR / "Ratings.csv"
+    users_path = BASE_DIR / "Users.csv"
+    books_path = BASE_DIR / "Books.csv"
+
+    # Check whether files exist
+    if not ratings_path.exists():
+        raise FileNotFoundError(f"Ratings.csv not found at: {ratings_path}")
+
+    if not users_path.exists():
+        raise FileNotFoundError(f"Users.csv not found at: {users_path}")
+
+    if not books_path.exists():
+        raise FileNotFoundError(f"Books.csv not found at: {books_path}")
+
+    # Load datasets
     ratings = pd.read_csv(
-        "Ratings.csv",
+        ratings_path,
         dtype={"ISBN": str},
         low_memory=False
     )
 
     users = pd.read_csv(
-        "Users.csv",
+        users_path,
         low_memory=False
     )
 
     books = pd.read_csv(
-        "Books.csv",
+        books_path,
         dtype={"ISBN": str},
         low_memory=False
     )
@@ -218,8 +239,13 @@ def load_data():
         subset=["User-ID", "ISBN"]
     )
 
-    books = books.drop_duplicates(subset=["ISBN"])
-    users = users.drop_duplicates(subset=["User-ID"])
+    books = books.drop_duplicates(
+        subset=["ISBN"]
+    )
+
+    users = users.drop_duplicates(
+        subset=["User-ID"]
+    )
 
     # Clean ratings
     ratings["Book-Rating"] = pd.to_numeric(
@@ -260,28 +286,39 @@ def load_data():
 
     # Fill missing text
     text_cols = [
-        "Book-Title", "Book-Author", "Publisher",
+        "Book-Title",
+        "Book-Author",
+        "Publisher",
         "Image-URL-M"
     ]
 
     for col in text_cols:
-        books[col] = books[col].fillna("Unknown").astype(str)
+        if col in books.columns:
+            books[col] = (
+                books[col]
+                .fillna("Unknown")
+                .astype(str)
+            )
 
     return ratings, explicit, users, books
 
+
+# --------------------------------------------------
+# LOAD DATA SAFELY
+# --------------------------------------------------
 
 try:
     ratings, explicit, users, books = load_data()
 
 except Exception as e:
     st.error(f"Error loading datasets: {e}")
+
     st.info(
-        "Keep Ratings.csv, Users.csv and Books.csv "
-        "in the same folder as app.py."
+        "Please make sure Ratings.csv, Users.csv and "
+        "Books.csv are in the same GitHub folder as app.py."
     )
+
     st.stop()
-
-
 # --------------------------------------------------
 # PREPARE ANALYTICS DATA
 # --------------------------------------------------
