@@ -203,7 +203,7 @@ def load_data():
 
     ratings_path = BASE_DIR / "Ratings.csv"
     users_path = BASE_DIR / "Users.csv"
-    books_path = BASE_DIR / "Books_final.csv"
+    books_path = BASE_DIR / "Books.csv"
 
     # Check files
     if not ratings_path.exists():
