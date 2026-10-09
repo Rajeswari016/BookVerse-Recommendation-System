@@ -204,6 +204,11 @@ def load_data():
     ratings_path = BASE_DIR / "Ratings.csv"
     users_path = BASE_DIR / "Users.csv"
     books_path = BASE_DIR / "Books.csv"
+    books = pd.read_csv(
+    books_path,
+    low_memory=False
+)
+
 
     # Check files
     if not ratings_path.exists():
