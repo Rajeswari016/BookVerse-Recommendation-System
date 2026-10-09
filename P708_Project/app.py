@@ -203,10 +203,13 @@ def load_data():
 
     ratings_path = BASE_DIR / "Ratings.csv"
     users_path = BASE_DIR / "Users.csv"
-    books_path = BASE_DIR / "Books.csv"
+    books_path = BASE_DIR / "Books.csv.gz"
+    ratings = pd.read_csv(ratings_path)
+    users = pd.read_csv(users_path)
     books = pd.read_csv(
     books_path,
-    low_memory=False
+    compression="gzip",
+    low_memory=False   
 )
 
 
